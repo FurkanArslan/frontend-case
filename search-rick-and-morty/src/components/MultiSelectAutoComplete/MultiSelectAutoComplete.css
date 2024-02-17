@@ -1,28 +1,7 @@
 .multi-select-container {
   position: relative;
-  width: 300px;
-}
-
-.selected-items {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.selected-item {
-  margin: 2px;
-  padding: 5px 10px;
-  background-color: #007bff;
-  color: white;
-  border-radius: 15px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.selected-item:hover {
-  background-color: #0056b3;
+  max-width: 500px;
+  margin: auto;
 }
 
 .autocomplete-input {
@@ -31,24 +10,10 @@
   border: none;
   border-bottom: 1px solid #ccc;
   outline: none;
+  margin-top: 10px;
+  border-radius: 4px;
 }
 
-.suggestions {
-  position: absolute;
+.selectedItemsContainer {
   width: 100%;
-  background-color: white;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  z-index: 1000;
-}
-
-.suggestion-item {
-  padding: 10px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.suggestion-item:hover,
-.suggestion-item.selected {
-  background-color: #f0f0f0;
 }

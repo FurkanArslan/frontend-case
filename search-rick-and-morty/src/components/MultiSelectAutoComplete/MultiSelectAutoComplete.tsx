@@ -3,6 +3,7 @@ import './MultiSelectAutoComplete.css';
 import { Character } from '../../types/Character';
 import Spinner from '../spinner/Spinner';
 import SuggestionsList from '../suggestionsList/SuggestionsList';
+import SelectedItems from '../selectedItems/SelectedItems';
 
 const MultiSelectAutoComplete: React.FC = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
@@ -17,9 +18,9 @@ const MultiSelectAutoComplete: React.FC = () => {
   const handleItemClick = (itemName: string) => {
     if (!selectedItems.includes(itemName)) {
       setSelectedItems([...selectedItems, itemName]);
-      setInputValue('');
-      setSuggestions([]);
     }
+    setInputValue('');
+    setSuggestions([]);
   };
 
   const handleRemoveItem = (itemToRemove: string) => {
@@ -34,7 +35,7 @@ const MultiSelectAutoComplete: React.FC = () => {
           .then(response => response.json())
           .then(data => {
             if (data.results) {
-              setSuggestions(data.results ? data.results : []);
+              setSuggestions(data.results || []);
               setIsLoading(false); // Yükleme bitti
             } else {
               setSuggestions([]);
@@ -54,13 +55,10 @@ const MultiSelectAutoComplete: React.FC = () => {
 
   return (
     <div className='multi-select-container'>
-      <div className='selected-items'>
-        {selectedItems.map(item => (
-          <span key={item} onClick={() => handleRemoveItem(item)} className='selected-item'>
-            {item} x
-          </span>
-        ))}
+      <div className='selectedItemsContainer'>
+        <SelectedItems selectedItems={selectedItems} onRemoveItem={handleRemoveItem} />
       </div>
+
       <input
         type="text"
         value={inputValue}

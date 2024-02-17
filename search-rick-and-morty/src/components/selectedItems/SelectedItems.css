@@ -1,0 +1,40 @@
+.selected-items {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.selected-item {
+    display: flex;
+    align-items: center;
+    margin: 2px;
+    padding: 5px;
+    background-color: #f0f0f0;
+    color: #333;
+    border-radius: 15px;
+}
+
+.remove-item-btn {
+    margin-left: 10px;
+    padding: 0 5px;
+    background-color: #808080;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.remove-item-btn:hover {
+    background-color: #a9a9a9;
+}
+
+.emptyMessage {
+    padding: 10px;
+    color: #757575;
+    background-color: #f0f0f0;
+    text-align: center;
+    border-radius: 4px;
+}
