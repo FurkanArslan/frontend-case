@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import styles from './MultiSelectAutoComplete.module.css';
+import './MultiSelectAutoComplete.css';
 import { Character } from '../../types/Character';
+import Spinner from '../spinner/Spinner';
 
 const MultiSelectAutoComplete: React.FC = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState('');
-  const [debouncedInputValue, setDebouncedInputValue] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (event: { target: { value: any; }; }) => {
     setInputValue(event.target.value);
@@ -24,10 +25,25 @@ const MultiSelectAutoComplete: React.FC = () => {
     setSelectedItems(selectedItems.filter(item => item !== itemToRemove));
   };
 
-  // Debounced input'u güncelle
   useEffect(() => {
     const handler = setTimeout(() => {
-      setDebouncedInputValue(inputValue);
+      if (inputValue) {
+        setIsLoading(true); // Yükleme başladı
+        fetch(`https://rickandmortyapi.com/api/character/?name=${encodeURIComponent(inputValue)}`)
+          .then(response => response.json())
+          .then(data => {
+            if (data.results) {
+              setSuggestions(data.results.map((character: Character) => character.name));
+              setIsLoading(false); // Yükleme bitti
+            } else {
+              setSuggestions([]);
+              setIsLoading(false); // Hata durumunda yükleme bitti
+            }
+          })
+          .catch(error => console.error('Error fetching data: ', error));
+      } else {
+        setSuggestions([]);
+      }
     }, 300);
 
     return () => {
@@ -35,29 +51,11 @@ const MultiSelectAutoComplete: React.FC = () => {
     };
   }, [inputValue]);
 
-  // API'den veri çekme
-  useEffect(() => {
-    if (debouncedInputValue) {
-      fetch(`https://rickandmortyapi.com/api/character/?name=${encodeURIComponent(debouncedInputValue)}`)
-        .then(response => response.json())
-        .then(data => {
-          if (data.results) {
-            setSuggestions(data.results.map((character: Character) => character.name));
-          } else {
-            setSuggestions([]);
-          }
-        })
-        .catch(error => console.error('Error fetching data: ', error));
-    } else {
-      setSuggestions([]);
-    }
-  }, [debouncedInputValue]);
-
   return (
-    <div className={styles['multi-select-container']}>
-      <div className={styles['selected-items']}>
+    <div className='multi-select-container'>
+      <div className='selected-items'>
         {selectedItems.map(item => (
-          <span key={item} onClick={() => handleRemoveItem(item)} className={styles['selected-item']}>
+          <span key={item} onClick={() => handleRemoveItem(item)} className='selected-item'>
             {item} x
           </span>
         ))}
@@ -66,16 +64,19 @@ const MultiSelectAutoComplete: React.FC = () => {
         type="text"
         value={inputValue}
         onChange={handleInputChange}
-        className={styles['autocomplete-input']}
+        className='autocomplete-input'
         placeholder="Başla yazmaya..."
       />
+
+      {isLoading ? <Spinner /> : null}
+
       {suggestions.length > 0 && (
-        <ul className={styles['suggestions']}>
+        <ul className='suggestions'>
           {suggestions.map((suggestion, index) => (
             <li
               key={suggestion}
               onClick={() => handleItemClick(suggestion)}
-              className={`${styles['suggestion-item']}`}
+              className='suggestion-item'
             >
               {suggestion}
             </li>

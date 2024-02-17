@@ -1,5 +1,4 @@
-import React from 'react';
-import MultiSelectAutoComplete from './components/MultiSelectAutoComplete/MultiSelectAutoComplete';
+import MultiSelectAutoComplete from './components/multiSelectAutoComplete/MultiSelectAutoComplete';
 import './App.css';
 
 const App = () => {
