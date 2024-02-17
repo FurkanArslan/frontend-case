@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import './MultiSelectAutoComplete.css';
 import { Character } from '../../types/Character';
 import Spinner from '../spinner/Spinner';
+import SuggestionsList from '../suggestionsList/SuggestionsList';
 
 const MultiSelectAutoComplete: React.FC = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<Character[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -33,7 +34,7 @@ const MultiSelectAutoComplete: React.FC = () => {
           .then(response => response.json())
           .then(data => {
             if (data.results) {
-              setSuggestions(data.results.map((character: Character) => character.name));
+              setSuggestions(data.results ? data.results : []);
               setIsLoading(false); // Yükleme bitti
             } else {
               setSuggestions([]);
@@ -65,23 +66,13 @@ const MultiSelectAutoComplete: React.FC = () => {
         value={inputValue}
         onChange={handleInputChange}
         className='autocomplete-input'
-        placeholder="Başla yazmaya..."
+        placeholder="Search for a character..."
       />
 
       {isLoading ? <Spinner /> : null}
 
-      {suggestions.length > 0 && (
-        <ul className='suggestions'>
-          {suggestions.map((suggestion, index) => (
-            <li
-              key={suggestion}
-              onClick={() => handleItemClick(suggestion)}
-              className='suggestion-item'
-            >
-              {suggestion}
-            </li>
-          ))}
-        </ul>
+      {!isLoading && suggestions.length > 0 && (
+        <SuggestionsList suggestions={suggestions} onItemClick={handleItemClick} query={inputValue} />
       )}
     </div>
   );
