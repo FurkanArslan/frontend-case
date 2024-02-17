@@ -1,26 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './MultiSelectAutoComplete.module.css';
+import { Character } from '../../types/Character';
 
 const MultiSelectAutoComplete: React.FC = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState('');
-
-  const allItems = ['Rick', 'Morty'];
+  const [debouncedInputValue, setDebouncedInputValue] = useState('');
 
   const handleInputChange = (event: { target: { value: any; }; }) => {
-    const value = event.target.value;
-    setInputValue(value);
-    if (!value) {
-      setSuggestions([]);
-    } else {
-      setSuggestions(allItems.filter(item => item.toLowerCase().includes(value.toLowerCase())));
-    }
+    setInputValue(event.target.value);
   };
 
-  const handleItemClick = (item: string) => {
-    if (!selectedItems.includes(item)) {
-      setSelectedItems([...selectedItems, item]);
+  const handleItemClick = (itemName: string) => {
+    if (!selectedItems.includes(itemName)) {
+      setSelectedItems([...selectedItems, itemName]);
       setInputValue('');
       setSuggestions([]);
     }
@@ -30,7 +24,34 @@ const MultiSelectAutoComplete: React.FC = () => {
     setSelectedItems(selectedItems.filter(item => item !== itemToRemove));
   };
 
-  console.log(styles)
+  // Debounced input'u güncelle
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedInputValue(inputValue);
+    }, 300);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [inputValue]);
+
+  // API'den veri çekme
+  useEffect(() => {
+    if (debouncedInputValue) {
+      fetch(`https://rickandmortyapi.com/api/character/?name=${encodeURIComponent(debouncedInputValue)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.results) {
+            setSuggestions(data.results.map((character: Character) => character.name));
+          } else {
+            setSuggestions([]);
+          }
+        })
+        .catch(error => console.error('Error fetching data: ', error));
+    } else {
+      setSuggestions([]);
+    }
+  }, [debouncedInputValue]);
 
   return (
     <div className={styles['multi-select-container']}>
