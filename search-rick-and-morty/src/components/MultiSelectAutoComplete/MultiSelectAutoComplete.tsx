@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, KeyboardEvent } from 'react';
 import './MultiSelectAutoComplete.css';
 import { Character } from '../../types/Character';
 import Spinner from '../spinner/Spinner';
@@ -12,6 +12,7 @@ const MultiSelectAutoComplete: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeSuggestionIndex, setActiveSuggestionIndex] = useState<number>(-1);
 
   const handleInputChange = (event: { target: { value: any; }; }) => {
     setInputValue(event.target.value);
@@ -36,7 +37,7 @@ const MultiSelectAutoComplete: React.FC = () => {
         setError(null); // Her yeni aramada hata durumunu sıfırla
 
         fetchCharacters(inputValue)
-          .then(characters  => {
+          .then(characters => {
             setSuggestions(characters);
             setIsLoading(false);
           })
@@ -55,6 +56,46 @@ const MultiSelectAutoComplete: React.FC = () => {
     };
   }, [inputValue]);
 
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault(); // Varsayılan yön tuşu davranışını engelle
+        if (activeSuggestionIndex < suggestions.length - 1) {
+          setActiveSuggestionIndex(activeSuggestionIndex + 1);
+        } else {
+          setActiveSuggestionIndex(-1); // Listenin sonunda input alanına odaklan
+        }
+        break;
+      case 'ArrowUp':
+        event.preventDefault(); // Varsayılan yön tuşu davranışını engelle
+        if (activeSuggestionIndex > 0) {
+          setActiveSuggestionIndex(activeSuggestionIndex - 1);
+        }
+        break;
+      case 'Enter':
+        event.preventDefault(); // Form gönderimini engelle
+        if (activeSuggestionIndex >= 0 && suggestions[activeSuggestionIndex]) {
+          handleItemClick(suggestions[activeSuggestionIndex].name);
+          setActiveSuggestionIndex(-1);
+        }
+        break;
+      case 'Tab':
+        if (!event.shiftKey && activeSuggestionIndex >= 0 && suggestions[activeSuggestionIndex]) {
+          event.preventDefault(); // Varsayılan Tab davranışını engelle
+          handleItemClick(suggestions[activeSuggestionIndex].name);
+          setActiveSuggestionIndex(-1);
+        }
+        break;
+      case 'Backspace':
+        if (inputValue === '' && selectedItems.length > 0) {
+          event.preventDefault(); // Varsayılan Backspace davranışını engelle
+          handleRemoveItem(selectedItems[selectedItems.length - 1]);
+        }
+        break;
+      // Diğer klavye olayları...
+    }
+  };
+
   return (
     <div className='multi-select-container'>
       <div className='selected-items-input-wrapper'>
@@ -66,6 +107,7 @@ const MultiSelectAutoComplete: React.FC = () => {
           onChange={handleInputChange}
           className='autocomplete-input'
           placeholder="Search for a character..."
+          onKeyDown={handleKeyDown}
         />
       </div>
 
@@ -74,7 +116,7 @@ const MultiSelectAutoComplete: React.FC = () => {
       {error && <div className="error-message">{error}</div>}
 
       {!isLoading && suggestions.length > 0 && (
-        <SuggestionsList suggestions={suggestions} onItemClick={handleItemClick} query={inputValue} />
+        <SuggestionsList suggestions={suggestions} onItemClick={handleItemClick} query={inputValue} activeSuggestionIndex={activeSuggestionIndex} />
       )}
     </div>
   );
