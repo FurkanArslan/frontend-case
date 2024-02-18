@@ -15,6 +15,7 @@ const MultiSelectAutoComplete: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isSuggestionsVisible, setIsSuggestionsVisible] = useState(false);
 
   // Referans tanımlamaları
   const selectedItemsRef = useRef<HTMLDivElement>(null);
@@ -22,14 +23,6 @@ const MultiSelectAutoComplete: React.FC = () => {
   // Event fonksiyonları
   const handleInputChange = (event: { target: { value: any; }; }) => {
     setInputValue(event.target.value);
-  };
-
-  const handleItemClick = (itemName: string) => {
-    if (!selectedItems.includes(itemName)) {
-      setSelectedItems([...selectedItems, itemName]);
-    }
-    setInputValue('');
-    setSuggestions([]);
   };
 
   const handleRemoveItem = (itemToRemove: string) => {
@@ -43,13 +36,29 @@ const MultiSelectAutoComplete: React.FC = () => {
     }
   };
 
+  // Karakterin seçili olup olmadığını kontrol et ve buna göre ekle veya çıkar
+  const handleToggleSelectedItem = (itemName: string) => {
+    setSelectedItems(prevSelectedItems => {
+      if (prevSelectedItems.includes(itemName)) {
+        return prevSelectedItems.filter(item => item !== itemName);  // Eğer zaten seçiliyse, listeden çıkar
+      } else {
+        return [...prevSelectedItems, itemName]; // Eğer seçili değilse, listeye ekle
+      }
+    });
+  };
+
+  const handleToggleSuggestionsVisibility = () => {
+    setIsSuggestionsVisible(prevState => !prevState);
+  };
+
   const { handleKeyDown, activeIndex } = useKeyboardNavigation({
     suggestions,
     selectedItems,
     onSelectedItemsChange: (items: string[]) => setSelectedItems(items),
-    handleItemClick,
+    onItemClicked: handleToggleSelectedItem,
     inputValue,
     onFocusSelectedItem: handleFocus,
+    hideSuggestions: () => setIsSuggestionsVisible(false),
   });
 
   useEffect(() => {
@@ -62,11 +71,13 @@ const MultiSelectAutoComplete: React.FC = () => {
           .then(characters => {
             setSuggestions(characters);
             setIsLoading(false);
+            setIsSuggestionsVisible(true);
           })
           .catch((error: Error) => {
             setError(error.message);
             setIsLoading(false);
             setSuggestions([]);
+            setIsSuggestionsVisible(false);
           });
       } else {
         setSuggestions([]);
@@ -95,18 +106,23 @@ const MultiSelectAutoComplete: React.FC = () => {
           placeholder="Search for a character..."
           onKeyDown={handleKeyDown}
         />
+
+        <button onClick={handleToggleSuggestionsVisibility} className="toggle-suggestions-button">
+          {(isSuggestionsVisible && suggestions.length > 0) ? '▲' : '▼'}
+        </button>
       </div>
 
       {isLoading ? <Spinner /> : null}
 
       {error && <ErrorMessage message={error} />}
 
-      {!isLoading && suggestions.length > 0 && (
+      {isSuggestionsVisible && !isLoading && suggestions.length > 0 && (
         <SuggestionsList
           suggestions={suggestions}
-          onItemClick={handleItemClick}
+          onItemClick={handleToggleSelectedItem}
           query={inputValue}
           activeIndex={activeIndex}
+          selectedItems={selectedItems}
         />
       )}
     </div>

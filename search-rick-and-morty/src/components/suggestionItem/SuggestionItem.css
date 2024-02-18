@@ -10,8 +10,9 @@
 .character-image {
     width: var(--character-img-size);
     height: var(--character-img-size);
-    border-radius: 50%;
+    border-radius: 20%;
     margin-right: 10px;
+    object-fit: cover;
 }
 
 .character-info {
@@ -21,4 +22,10 @@
 
 .character-episodes {
     font-size: 0.8rem;
+}
+
+.suggestion-checkbox {
+    margin-right: 10px;
+    height: 20px;
+    width: 20px;
 }

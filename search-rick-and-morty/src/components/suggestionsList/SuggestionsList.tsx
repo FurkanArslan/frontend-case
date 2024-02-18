@@ -7,9 +7,10 @@ interface SuggestionsListProps {
     onItemClick: (name: string) => void;
     query: string;
     activeIndex: number;
+    selectedItems: string[];
 }
 
-const SuggestionsList: React.FC<SuggestionsListProps> = ({ suggestions, onItemClick, query, activeIndex }) => (
+const SuggestionsList: React.FC<SuggestionsListProps> = ({ suggestions, onItemClick, query, activeIndex, selectedItems }) => (
     <ul className="suggestions-list">
         {suggestions.map((character, index) => (
             <li
@@ -19,7 +20,7 @@ const SuggestionsList: React.FC<SuggestionsListProps> = ({ suggestions, onItemCl
                 id={`suggestion-${index}`}
                 className={`suggestion-item ${index === activeIndex ? 'active' : ''}`}
             >
-                <SuggestionItem character={character} query={query} />
+                <SuggestionItem character={character} query={query} isSelected={selectedItems.includes(character.name)} />
             </li>
         ))}
     </ul>

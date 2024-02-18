@@ -5,18 +5,20 @@ interface UseKeyboardNavigationProps {
     suggestions: Character[];
     selectedItems: string[];
     onSelectedItemsChange: (items: string[]) => void;
-    handleItemClick: (itemName: string) => void;
+    onItemClicked: (itemName: string) => void;
     inputValue: string;
     onFocusSelectedItem: () => void;
+    hideSuggestions: () => void;
 }
 
 export const useKeyboardNavigation = ({
     suggestions,
     selectedItems,
     onSelectedItemsChange,
-    handleItemClick,
+    onItemClicked,
     inputValue,
     onFocusSelectedItem,
+    hideSuggestions,
 }: UseKeyboardNavigationProps) => {
     const [activeIndex, setActiveIndex] = useState<number>(-1);
 
@@ -49,7 +51,7 @@ export const useKeyboardNavigation = ({
                 event.preventDefault();
 
                 if (activeIndex >= 0 && suggestions[activeIndex]) {
-                    handleItemClick(suggestions[activeIndex].name);
+                    onItemClicked(suggestions[activeIndex].name);
                     setActiveIndex(-1);
                 }
                 break;
@@ -59,7 +61,7 @@ export const useKeyboardNavigation = ({
                 if (activeIndex === -1) {
                     setActiveIndex(suggestions.length > 0 ? 0 : -1);
                 } else {
-                    setActiveIndex(-1); 
+                    setActiveIndex(-1);
                     onFocusSelectedItem();
                 }
 
@@ -70,6 +72,12 @@ export const useKeyboardNavigation = ({
                     const newSelectedItems = selectedItems.slice(0, selectedItems.length - 1);
                     onSelectedItemsChange(newSelectedItems);
                 }
+                break;
+
+            case 'Escape':
+                event.preventDefault();
+
+                hideSuggestions();
                 break;
         }
     };

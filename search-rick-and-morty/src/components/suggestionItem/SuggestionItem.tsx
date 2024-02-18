@@ -4,9 +4,10 @@ import './SuggestionItem.css';
 interface SuggestionItemProps {
     character: Character;
     query: string;
+    isSelected: boolean;
 }
 
-const SuggestionItem: React.FC<SuggestionItemProps> = ({ character, query }) => {
+const SuggestionItem: React.FC<SuggestionItemProps> = ({ character, query, isSelected }) => {
     const matchIndex = character.name.toLowerCase().indexOf(query.toLowerCase());
     const beforeMatch = character.name.substring(0, matchIndex);
     const matchText = character.name.substring(matchIndex, matchIndex + query.length);
@@ -14,6 +15,11 @@ const SuggestionItem: React.FC<SuggestionItemProps> = ({ character, query }) => 
 
     return (
         <div className="suggestion-item">
+            <input
+                type="checkbox"
+                checked={isSelected}
+                className="suggestion-checkbox"
+            />
             <img src={character.image} alt={character.name} className="character-image" />
             <div className="character-info">
                 <div className="character-name">

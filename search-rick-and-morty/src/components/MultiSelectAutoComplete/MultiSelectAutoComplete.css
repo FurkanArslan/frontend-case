@@ -16,6 +16,12 @@
   align-items: center;
   padding: 5px;
   border: 1px solid #ccc;
-  border-radius: 4px;
+  border-radius: 20px;
   gap: 8px;
+}
+
+.toggle-suggestions-button {
+  cursor: pointer;
+  background: none;
+  border: none;
 }
