@@ -1,4 +1,5 @@
 import MultiSelectAutoComplete from './components/multiSelectAutoComplete/MultiSelectAutoComplete';
+import './styles/colors.css';
 import './App.css';
 
 const App = () => {

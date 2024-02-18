@@ -12,7 +12,7 @@
     align-items: center;
     margin: 2px;
     padding: 5px;
-    background-color: #f0f0f0;
+    background-color: var(--active-color);
     color: #333;
     border-radius: 15px;
     font-weight: bold;
@@ -36,7 +36,7 @@
 .emptyMessage {
     padding: 10px;
     color: #757575;
-    background-color: #f0f0f0;
+    background-color: var(--active-color);
     text-align: center;
     border-radius: 4px;
 }

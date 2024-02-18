@@ -2,7 +2,7 @@
     margin-top: 10px;
     padding: 10px;
     background-color: #f8d7da;
-    color: #721c24;
+    color: var(--error-color);
     border: 1px solid #f5c6cb;
     border-radius: 4px;
     text-align: center;

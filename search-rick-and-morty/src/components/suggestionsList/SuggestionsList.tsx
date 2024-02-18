@@ -16,7 +16,6 @@ const SuggestionsList: React.FC<SuggestionsListProps> = ({ suggestions, onItemCl
             <li
                 key={character.id}
                 onClick={() => onItemClick(character.name)}
-                style={{ backgroundColor: index === activeIndex ? '#f0f0f0' : 'transparent' }}
                 id={`suggestion-${index}`}
                 className={`suggestion-item ${index === activeIndex ? 'active' : ''}`}
             >
