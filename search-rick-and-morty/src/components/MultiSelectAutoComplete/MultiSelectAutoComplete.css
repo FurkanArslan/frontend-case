@@ -11,9 +11,7 @@
 }
 
 .selected-items-input-wrapper {
-  display: flex;
   flex-wrap: wrap;
-  align-items: center;
   padding: 5px;
   border: 1px solid var(--border-color);
   border-radius: 20px;

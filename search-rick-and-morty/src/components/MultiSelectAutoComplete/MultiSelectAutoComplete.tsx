@@ -92,7 +92,7 @@ const MultiSelectAutoComplete: React.FC = () => {
   return (
     <div className='multi-select-container'>
       <div
-        className='selected-items-input-wrapper'
+        className='selected-items-input-wrapper flex-center'
         ref={selectedItemsRef}
         tabIndex={-1}
       >

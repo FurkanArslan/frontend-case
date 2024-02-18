@@ -13,9 +13,9 @@ const SelectedItems: React.FC<SelectedItemsProps> = ({ selectedItems, onRemoveIt
     }
 
     return (
-        <div className="selected-items">
+        <div className="selected-items flex-center">
             {selectedItems.map((item, index) => (
-                <div key={index} className="selected-item">
+                <div key={index} className="selected-item flex-center">
                     {item}
                     <button onClick={() => onRemoveItem(item)} className="remove-item-btn">X</button>
                 </div>

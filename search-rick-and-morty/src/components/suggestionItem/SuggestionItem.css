@@ -1,8 +1,6 @@
 .suggestion-item {
     --character-img-size: 50px;
 
-    display: flex;
-    align-items: center;
     padding: 10px;
     cursor: pointer;
 }
@@ -13,11 +11,6 @@
     border-radius: 20%;
     margin-right: 10px;
     object-fit: cover;
-}
-
-.character-info {
-    display: flex;
-    flex-direction: column;
 }
 
 .character-episodes {

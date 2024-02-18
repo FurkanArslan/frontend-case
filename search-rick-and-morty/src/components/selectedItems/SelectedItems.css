@@ -2,14 +2,10 @@
     margin-right: 8px;
     border-radius: 4px;
     padding: 5px 10px;
-    display: flex;
-    align-items: center;
     height: auto;
 }
 
 .selected-item {
-    display: flex;
-    align-items: center;
     margin: 2px;
     padding: 5px;
     background-color: var(--active-color);
@@ -31,12 +27,4 @@
 
 .remove-item-btn:hover {
     background-color: #a9a9a9;
-}
-
-.emptyMessage {
-    padding: 10px;
-    color: #757575;
-    background-color: var(--active-color);
-    text-align: center;
-    border-radius: 4px;
 }

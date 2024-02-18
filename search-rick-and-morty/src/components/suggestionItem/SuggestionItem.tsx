@@ -14,14 +14,14 @@ const SuggestionItem: React.FC<SuggestionItemProps> = ({ character, query, isSel
     const afterMatch = character.name.substring(matchIndex + query.length);
 
     return (
-        <div className="suggestion-item">
+        <div className="suggestion-item  flex-center">
             <input
                 type="checkbox"
                 checked={isSelected}
                 className="suggestion-checkbox"
             />
             <img src={character.image} alt={character.name} className="character-image" />
-            <div className="character-info">
+            <div className="flex-column">
                 <div className="character-name">
                     {beforeMatch}
                     <strong>{matchText}</strong>
