@@ -4,12 +4,14 @@ import { Character } from '../../types/Character';
 import Spinner from '../spinner/Spinner';
 import SuggestionsList from '../suggestionsList/SuggestionsList';
 import SelectedItems from '../selectedItems/SelectedItems';
+import { fetchCharacters } from '../../utils/api';
 
 const MultiSelectAutoComplete: React.FC = () => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [suggestions, setSuggestions] = useState<Character[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleInputChange = (event: { target: { value: any; }; }) => {
     setInputValue(event.target.value);
@@ -31,18 +33,18 @@ const MultiSelectAutoComplete: React.FC = () => {
     const handler = setTimeout(() => {
       if (inputValue) {
         setIsLoading(true); // Yükleme başladı
-        fetch(`https://rickandmortyapi.com/api/character/?name=${encodeURIComponent(inputValue)}`)
-          .then(response => response.json())
-          .then(data => {
-            if (data.results) {
-              setSuggestions(data.results || []);
-              setIsLoading(false); // Yükleme bitti
-            } else {
-              setSuggestions([]);
-              setIsLoading(false); // Hata durumunda yükleme bitti
-            }
+        setError(null); // Her yeni aramada hata durumunu sıfırla
+
+        fetchCharacters(inputValue)
+          .then(characters  => {
+            setSuggestions(characters);
+            setIsLoading(false);
           })
-          .catch(error => console.error('Error fetching data: ', error));
+          .catch((error: Error) => {
+            console.error(error.message);
+            setError('Characters could not be fetched.');
+            setIsLoading(false);
+          });
       } else {
         setSuggestions([]);
       }
@@ -68,6 +70,8 @@ const MultiSelectAutoComplete: React.FC = () => {
       </div>
 
       {isLoading ? <Spinner /> : null}
+
+      {error && <div className="error-message">{error}</div>}
 
       {!isLoading && suggestions.length > 0 && (
         <SuggestionsList suggestions={suggestions} onItemClick={handleItemClick} query={inputValue} />
