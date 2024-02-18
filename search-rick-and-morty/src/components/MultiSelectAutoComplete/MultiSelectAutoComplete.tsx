@@ -6,6 +6,7 @@ import SuggestionsList from '../suggestionsList/SuggestionsList';
 import SelectedItems from '../selectedItems/SelectedItems';
 import { fetchCharacters } from '../../utils/api';
 import { useKeyboardNavigation } from '../../hooks/useKeyboardNavigation';
+import ErrorMessage from '../errorMessages/ErrorMessage';
 
 const MultiSelectAutoComplete: React.FC = () => {
   // State tanımlamaları
@@ -98,7 +99,7 @@ const MultiSelectAutoComplete: React.FC = () => {
 
       {isLoading ? <Spinner /> : null}
 
-      {error && <div className="error-message">{error}</div>}
+      {error && <ErrorMessage message={error} />}
 
       {!isLoading && suggestions.length > 0 && (
         <SuggestionsList

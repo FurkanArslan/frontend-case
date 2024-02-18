@@ -6,7 +6,7 @@ export const fetchCharacters = async (query: string): Promise<Character[]> => {
         const response = await fetch(`https://rickandmortyapi.com/api/character/?name=${encodeURIComponent(query)}`);
         
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            throw new Error('Error fetching characters');
         }
         const data: ApiResult = await response.json();
 
