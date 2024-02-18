@@ -9,7 +9,7 @@ interface SelectedItemsProps {
 const SelectedItems: React.FC<SelectedItemsProps> = ({ selectedItems, onRemoveItem }) => {
 
     if (selectedItems.length === 0) {
-        return <div className='emptyMessage'>No items selected</div>;
+        return null;
     }
 
     return (

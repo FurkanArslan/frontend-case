@@ -55,17 +55,17 @@ const MultiSelectAutoComplete: React.FC = () => {
 
   return (
     <div className='multi-select-container'>
-      <div className='selectedItemsContainer'>
+      <div className='selected-items-input-wrapper'>
         <SelectedItems selectedItems={selectedItems} onRemoveItem={handleRemoveItem} />
-      </div>
 
-      <input
-        type="text"
-        value={inputValue}
-        onChange={handleInputChange}
-        className='autocomplete-input'
-        placeholder="Search for a character..."
-      />
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          className='autocomplete-input'
+          placeholder="Search for a character..."
+        />
+      </div>
 
       {isLoading ? <Spinner /> : null}
 
