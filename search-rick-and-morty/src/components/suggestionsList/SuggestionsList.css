@@ -17,3 +17,12 @@
 .suggestions-list li:last-child {
     border-bottom: none;
 }
+
+.suggestion-item {
+    cursor: pointer;
+    background-color: transparent;
+}
+
+.suggestion-item.active {
+    background-color: #f0f0f0;
+}
